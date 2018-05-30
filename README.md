@@ -140,8 +140,3 @@ This extension was tested on PHP 7.1.11 with extension built from provided repos
 
 Another better option - is to use officially ported xhprof extension by [tideways.io](https://tideways.io) - https://github.com/tideways/php-xhprof-extension.
 
-
-Author
--------------
-
-Copyright (c) 2015-2018 by imhelle.
