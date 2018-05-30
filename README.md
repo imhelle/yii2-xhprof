@@ -7,8 +7,6 @@ Bundled with debug panel for official [yii2-debug](https://github.com/yiisoft/yi
 
 By default profile starts during bootstrap process and stops in PHP shutdown function. You can change this behavior and manually start and stop profiler.
 
-For license information check the [LICENSE](LICENSE.md) file.
-
 Tested on Yii Framework v2.0.6+.
 
 Installation
@@ -27,7 +25,7 @@ return [
     ],
     'components' => [
         'xhprof' => [
-            'class' => 'stevad\xhprof\XHProfComponent',
+            'class' => 'imhelle\xhprof\XHProfComponent',
             'libPath' => '/full/path/to/xhprof_lib',
             'htmlReportBaseUrl' => 'http://url.to/xhprof_html',
         ],
@@ -48,7 +46,7 @@ return [
             // ... other debug config options ...
             'panels' => [
                 'xhprof' => [
-                    'class' => 'stevad\xhprof\XHProfPanel'
+                    'class' => 'imhelle\xhprof\XHProfPanel'
                 ]
             ]
         ],

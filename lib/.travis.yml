@@ -1,0 +1,28 @@
+language: php
+
+branches:
+  only:
+    - master
+
+notifications:
+  email: false
+
+php:
+  - 5.6
+  - 5.5
+  - 5.4
+  - 5.3
+  - 5.3.3
+
+env:
+  global:
+    - NO_INTERACTION=1
+
+before_script:
+  - phpize
+  - ./configure 
+  - make
+
+script: REPORT_EXIT_STATUS=1 php run-tests.php -p `which php` --show-diff -d extension=`pwd`/.libs/xhprof.so -q
+
+after_failure: "cat tests/*.diff"

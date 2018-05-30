@@ -1,5 +1,5 @@
 {
-  "name": "stevad/yii2-xhprof",
+  "name": "imhelle/yii2-xhprof",
   "description": "Simple extension to profile Yii Framework 2.x applications with Facebook XHProf",
   "keywords": [
     "yii",

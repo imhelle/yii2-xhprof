@@ -28,7 +28,7 @@ class XHProfComponent extends \yii\base\Component implements BootstrapInterface
      *
      * @var bool
      */
-    public $enabled = true;
+    public $enabled = false;
 
     /**
      * Direct filesystem path or path alias to directory with reports file
@@ -86,7 +86,7 @@ class XHProfComponent extends \yii\base\Component implements BootstrapInterface
      *
      * @var string
      */
-    public $libPath;
+    public $libPath = '@yii2-xhprof/lib/xhprof_lib';
 
     /**
      * URL path to XHProf html reporting files without leading slash
@@ -158,7 +158,7 @@ class XHProfComponent extends \yii\base\Component implements BootstrapInterface
      * by configuration).
      *
      * @return void
-     * @throws ErrorException
+     * @throws \Exception
      */
     public function bootstrap($app)
     {
@@ -170,7 +170,7 @@ class XHProfComponent extends \yii\base\Component implements BootstrapInterface
         }
 
         if (empty($this->libPath)) {
-            throw new ErrorException('Lib path cannot be empty');
+            throw new \Exception('Lib path cannot be empty');
         }
 
         $libPath = $this->libPath;
