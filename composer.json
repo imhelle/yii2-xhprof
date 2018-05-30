@@ -9,7 +9,7 @@
     "debug",
     "xhprof"
   ],
-  "homepage": "https://github.com/stevad/yii2-xhprof",
+  "homepage": "https://github.com/imhelle/yii2-xhprof",
   "type": "library",
   "license": "BSD-3-Clause",
   "require": {
@@ -20,15 +20,9 @@
   "require-dev": {
     "yiisoft/yii2-debug": ">=2.0.6"
   },
-  "authors": [
-    {
-      "name": "Vadym Stepanov",
-      "email": "vadim.stepanov.ua@gmail.com"
-    }
-  ],
   "autoload": {
     "psr-4": {
-      "stevad\\xhprof\\": ""
+      "imhelle\\xhprof\\": ""
     }
   }
 }

@@ -1,6 +1,6 @@
 <?php
 
-namespace stevad\xhprof;
+namespace imhelle\xhprof;
 
 use Yii;
 use yii\base\BootstrapInterface;

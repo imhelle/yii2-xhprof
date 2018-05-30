@@ -1,6 +1,6 @@
 <?php
 
-namespace stevad\xhprof;
+namespace imhelle\xhprof;
 
 /**
  * Class XHProf

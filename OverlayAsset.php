@@ -1,6 +1,6 @@
 <?php
 
-namespace stevad\xhprof;
+namespace imhelle\xhprof;
 
 /**
  * Class OverlayAsset
@@ -11,7 +11,7 @@ namespace stevad\xhprof;
  */
 class OverlayAsset extends DebugPanelAsset
 {
-    public $sourcePath = '@vendor/stevad/yii2-xhprof';
+    public $sourcePath = '@vendor/imhelle/yii2-xhprof';
 
     public $css = [
         'assets/xhprof.css'

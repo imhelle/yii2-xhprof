@@ -1,6 +1,6 @@
 <?php
 /* @var \yii\web\View $this */
-/* @var \stevad\xhprof\XHProfPanel $panel */
+/* @var \imhelle\xhprof\XHProfPanel $panel */
 /* @var array $urls */
 /* @var bool $enabled */
 ?>

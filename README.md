@@ -1,7 +1,7 @@
 yii2-xhprof
 =================
 
-Simple extension to use XHProf with Yii Framework 2.x. This is the updated version of [yii-xhprof](https://github.com/stevad/yii-xhprof) extension for Yii Framework 1.x.
+Simple extension to use XHProf with Yii Framework 2.x. This is the updated version of [yii-xhprof](https://github.com/imhelle/yii-xhprof) extension for Yii Framework 1.x.
 
 Bundled with debug panel for official [yii2-debug](https://github.com/yiisoft/yii2-debug) extension.
 
@@ -12,9 +12,9 @@ Tested on Yii Framework v2.0.6+.
 Installation
 -------------
 
-This extension is available at [packagist.org](http://packagist.org/stevad/yii2-xhprof) and can be installed via composer by following command:
+This extension is available at [packagist.org](http://packagist.org/imhelle/yii2-xhprof) and can be installed via composer by following command:
 
-`composer require --dev stevad/yii2-xhprof`.
+`composer require --dev imhelle/yii2-xhprof`.
 
 Minimal configuration to enable profiler:
 
@@ -105,7 +105,7 @@ To manual start you need to write some kind of next code:
 
 ```php
 // create and configure instance of XHProf class
-\stevad\xhprof\XHProf::getInstance()->configure(array(
+\imhelle\xhprof\XHProf::getInstance()->configure(array(
     'flagNoBuiltins' => true,
     'flagCpu' => false,
     'flagMemory' => true,
@@ -115,18 +115,18 @@ To manual start you need to write some kind of next code:
 ));
 
 // start profiler
-\stevad\xhprof\XHProf::getInstance()->run();
+\imhelle\xhprof\XHProf::getInstance()->run();
 ```
 
 To manual stop you need to write next code:
 
 ```php
 // stop profiler and get URLs to results and callgraph
-$urls = \stevad\xhprof\XHProf::getInstance()->stop();
+$urls = \imhelle\xhprof\XHProf::getInstance()->stop();
 
 // Links:
-// $urls[\stevad\xhprof\XHProf::TYPE_REPORT]
-// $urls[\stevad\xhprof\XHProf::TYPE_CALLGRAPH]
+// $urls[\imhelle\xhprof\XHProf::TYPE_REPORT]
+// $urls[\imhelle\xhprof\XHProf::TYPE_CALLGRAPH]
 ```
 
 _Note:_ If you use `XHProf` class (with or without this extension) - all profile results can be found on XHProf UI page (it's by default by xhprof developers).
@@ -144,4 +144,4 @@ Another better option - is to use officially ported xhprof extension by [tideway
 Author
 -------------
 
-Copyright (c) 2015-2018 by Stevad.
+Copyright (c) 2015-2018 by imhelle.

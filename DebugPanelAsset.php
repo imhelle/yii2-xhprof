@@ -1,6 +1,6 @@
 <?php
 
-namespace stevad\xhprof;
+namespace imhelle\xhprof;
 
 use yii\web\AssetBundle;
 
@@ -13,7 +13,7 @@ use yii\web\AssetBundle;
  */
 class DebugPanelAsset extends AssetBundle
 {
-    public $sourcePath = '@vendor/stevad/yii2-xhprof';
+    public $sourcePath = '@vendor/imhelle/yii2-xhprof';
 
     public $css = [
         'assets/xhprof.css'
