@@ -1,5 +1,5 @@
 {
-  "name": "imhelle/yii2-xhprof",
+  "name": "imhelle/yii2-xhprof-lib",
   "description": "Simple extension to profile Yii Framework 2.x applications with Facebook XHProf",
   "keywords": [
     "yii",
