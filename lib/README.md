@@ -1,3 +1,8 @@
+It's a slightly changed Xhprof extension from QafooLabs. 
+It works on php5.6 without segfault and it has the original methods names (xhprof_enable etc) as in original Facebook's xhprof. 
+
+Here's the Qafoo's readme:
+
 # Moved to Tideways/php-profiler-extension
 
 Work on this repository has moved to [tideways/php-profiler-extension](https://github.com/tideways/php-profiler-extension). This repository is kept only for backwards compatibility reasons.

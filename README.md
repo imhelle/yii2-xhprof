@@ -9,7 +9,24 @@ By default profile starts during bootstrap process and stops in PHP shutdown fun
 
 Tested on Yii Framework v2.0.6+.
 
-Installation
+Xhprof installation
+-------------
+
+(CentOS)
+
+    sudo yum install gcc
+    
+    cd /www/biglion/general/data/lib/vendor/imhelle/yii2-xhprof-lib/lib/
+    phpize
+    ./configure
+    make
+    make test
+    sudo make install
+    
+    sudo yum install graphviz
+
+
+Yii extension installation
 -------------
 
 This extension is available at [packagist.org](http://packagist.org/imhelle/yii2-xhprof) and can be installed via composer by following command:
