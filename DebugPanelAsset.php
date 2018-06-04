@@ -13,7 +13,7 @@ use yii\web\AssetBundle;
  */
 class DebugPanelAsset extends AssetBundle
 {
-    public $sourcePath = '@vendor/imhelle/yii2-xhprof';
+    public $sourcePath = '@vendor/imhelle/yii2-xhprof-lib';
 
     public $css = [
         'assets/xhprof.css'

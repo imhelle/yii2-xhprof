@@ -11,7 +11,7 @@ namespace imhelle\xhprof;
  */
 class OverlayAsset extends DebugPanelAsset
 {
-    public $sourcePath = '@vendor/imhelle/yii2-xhprof';
+    public $sourcePath = '@vendor/imhelle/yii2-xhprof-lib';
 
     public $css = [
         'assets/xhprof.css'

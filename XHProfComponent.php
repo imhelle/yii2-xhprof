@@ -28,14 +28,14 @@ class XHProfComponent extends \yii\base\Component implements BootstrapInterface
      *
      * @var bool
      */
-    public $enabled = false;
+    public $enabled = true;
 
     /**
      * Direct filesystem path or path alias to directory with reports file
      *
      * @var string
      */
-    public $reportPath = '@runtime/xhprof';
+    public $reportPath;
 
     /**
      * How many reports to store in history file
@@ -79,7 +79,7 @@ class XHProfComponent extends \yii\base\Component implements BootstrapInterface
      *
      * @var bool
      */
-    public $showOverlay = true;
+    public $showOverlay = false;
 
     /**
      * Direct filesystem path or path alias to the 'xhprof_lib' directory
@@ -196,6 +196,8 @@ class XHProfComponent extends \yii\base\Component implements BootstrapInterface
             OverlayAsset::register($app->view);
             $app->view->on(View::EVENT_END_BODY, [$this, 'appendResultsOverlay']);
         }
+
+        $this->getReportSavePath();
 
         \register_shutdown_function([$this, 'stopProfiling']);
     }
@@ -330,7 +332,7 @@ class XHProfComponent extends \yii\base\Component implements BootstrapInterface
         if ($this->reportSavePath === null) {
             $path = $this->reportPath;
             if ($path === null) {
-                $path = Yii::$app->getRuntimePath() . '/xhprof';
+                $path = sys_get_temp_dir() . '/xhprof/runs';
             } elseif (\strpos($path, '@') === 0) {
                 $path = Yii::getAlias($path);
             }
@@ -406,7 +408,7 @@ class XHProfComponent extends \yii\base\Component implements BootstrapInterface
 (function() {
     var overlay = document.createElement('div');
     overlay.setAttribute('id', 'xhprof-overlay');
-    overlay.innerHTML = '<div class="xhprof-header">XHProf</div><a href="{$reportUrl}" target="_blank">Report</a><a href="{$callgraphUrl}" target="_blank">Callgraph</a>';
+    overlay.innerHTML = '<div class="xhprof-header">XHProf</div><a href="//{$reportUrl}" target="_blank">Report</a><a href="//{$callgraphUrl}" target="_blank">Callgraph</a>';
     document.getElementsByTagName('body')[0].appendChild(overlay);
 })();
 </script>
