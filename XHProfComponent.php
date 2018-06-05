@@ -183,7 +183,7 @@ class XHProfComponent extends \yii\base\Component implements BootstrapInterface
             'flagCpu' => $this->flagCpu,
             'flagMemory' => $this->flagMemory,
             'ignoredFunctions' => $this->ignoredFunctions,
-            'runNamespace' => Yii::$app->id,
+            'runNamespace' => Yii::$app->id . '---' . preg_replace('/[^A-Za-z0-9_]+/', '-', $_SERVER['REQUEST_URI']),
             'libPath' => $libPath,
             'htmlUrlPath' => $this->getReportBaseUrl(),
         ]);
