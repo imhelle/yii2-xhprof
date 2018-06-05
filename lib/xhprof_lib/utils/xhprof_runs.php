@@ -141,7 +141,7 @@ class XHProfRuns_Default implements iXHProfRuns {
             xhprof_error("Could not open $file_name\n");
         }
 
-        echo "Saved run in {$file_name}.\nRun id = {$run_id}.\n";
+        //echo "Saved run in {$file_name}.\nRun id = {$run_id}.\n";
         return $run_id;
     }
 
