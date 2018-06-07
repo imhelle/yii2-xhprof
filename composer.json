@@ -1,6 +1,7 @@
 {
   "name": "imhelle/yii2-xhprof-lib",
   "description": "Simple extension to profile Yii Framework 2.x applications with XHProf",
+  "license": "BSD-3-Clause",
   "keywords": [
     "yii",
     "yii2",
