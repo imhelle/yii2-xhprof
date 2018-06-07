@@ -24,6 +24,13 @@ use yii\web\View;
 class XHProfComponent extends \yii\base\Component implements BootstrapInterface
 {
     /**
+     * Allow gracefully exiting after runtime crash (e.g. if php extension is not loaded)
+     *
+     * @var bool
+     */
+    public $allowCrash = true;
+
+    /**
      * Enable/disable component in Yii
      *
      * @var bool
@@ -178,15 +185,23 @@ class XHProfComponent extends \yii\base\Component implements BootstrapInterface
             $libPath = Yii::getAlias($libPath);
         }
 
-        XHProf::getInstance()->configure([
-            'flagNoBuiltins' => $this->flagNoBuiltins,
-            'flagCpu' => $this->flagCpu,
-            'flagMemory' => $this->flagMemory,
-            'ignoredFunctions' => $this->ignoredFunctions,
-            'runNamespace' => Yii::$app->id . '---' . preg_replace('/[^A-Za-z0-9_]+/', '-', $_SERVER['REQUEST_URI']),
-            'libPath' => $libPath,
-            'htmlUrlPath' => $this->getReportBaseUrl(),
-        ]);
+        try {
+            XHProf::getInstance()->configure([
+                'flagNoBuiltins' => $this->flagNoBuiltins,
+                'flagCpu' => $this->flagCpu,
+                'flagMemory' => $this->flagMemory,
+                'ignoredFunctions' => $this->ignoredFunctions,
+                'runNamespace' => Yii::$app->id . '---' . preg_replace('/[^A-Za-z0-9_]+/', '-', $_SERVER['REQUEST_URI']),
+                'libPath' => $libPath,
+                'htmlUrlPath' => $this->getReportBaseUrl(),
+            ]);
+        } catch (\RuntimeException $e) {
+            if ($this->allowCrash) {
+                return;
+            } else {
+                throw $e;
+            }
+        }
 
         if ($this->autoStart) {
             XHProf::getInstance()->run();
