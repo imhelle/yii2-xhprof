@@ -169,23 +169,22 @@ class XHProfComponent extends \yii\base\Component implements BootstrapInterface
      */
     public function bootstrap($app)
     {
-        if (!$this->enabled
-            || ($this->triggerGetParam !== null && $app->request->getQueryParam($this->triggerGetParam) === null)
-            || $this->isRouteBlacklisted()
-        ) {
-            return;
-        }
-
-        if (empty($this->libPath)) {
-            throw new \Exception('Lib path cannot be empty');
-        }
-
-        $libPath = $this->libPath;
-        if (\strpos($libPath, '@') === 0) {
-            $libPath = Yii::getAlias($libPath);
-        }
-
         try {
+            if (!$this->enabled
+                || ($this->triggerGetParam !== null && $app->request->getQueryParam($this->triggerGetParam) === null)
+                || $this->isRouteBlacklisted()
+            ) {
+                return;
+            }
+
+            if (empty($this->libPath)) {
+                throw new \Exception('Lib path cannot be empty');
+            }
+
+            $libPath = $this->libPath;
+            if (\strpos($libPath, '@') === 0) {
+                $libPath = Yii::getAlias($libPath);
+            }
             XHProf::getInstance()->configure([
                 'flagNoBuiltins' => $this->flagNoBuiltins,
                 'flagCpu' => $this->flagCpu,
@@ -195,7 +194,22 @@ class XHProfComponent extends \yii\base\Component implements BootstrapInterface
                 'libPath' => $libPath,
                 'htmlUrlPath' => $this->getReportBaseUrl(),
             ]);
-        } catch (\RuntimeException $e) {
+
+            if ($this->autoStart) {
+                XHProf::getInstance()->run();
+            }
+
+            if ($this->showOverlay && !$app->request->isAjax) {
+                OverlayAsset::register($app->view);
+                $app->view->on(View::EVENT_END_BODY, [$this, 'appendResultsOverlay']);
+            }
+
+            $this->getReportSavePath();
+
+            \register_shutdown_function([$this, 'stopProfiling']);
+            
+            
+        } catch (\Exception $e) {
             if ($this->allowCrash) {
                 return;
             } else {
@@ -203,18 +217,6 @@ class XHProfComponent extends \yii\base\Component implements BootstrapInterface
             }
         }
 
-        if ($this->autoStart) {
-            XHProf::getInstance()->run();
-        }
-
-        if ($this->showOverlay && !$app->request->isAjax) {
-            OverlayAsset::register($app->view);
-            $app->view->on(View::EVENT_END_BODY, [$this, 'appendResultsOverlay']);
-        }
-
-        $this->getReportSavePath();
-
-        \register_shutdown_function([$this, 'stopProfiling']);
     }
 
     /**
