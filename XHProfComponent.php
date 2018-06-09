@@ -264,7 +264,6 @@ class XHProfComponent extends \yii\base\Component implements BootstrapInterface
                 return true;
             }
             $requestRoute = $request[0];
-            var_dump($requestRoute);
         }
 
         foreach ($routes as $route) {
