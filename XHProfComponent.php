@@ -7,6 +7,7 @@ use yii\base\BootstrapInterface;
 use yii\base\ErrorException;
 use yii\helpers\FileHelper;
 use yii\helpers\Json;
+use yii\web\Cookie;
 use yii\web\View;
 
 /**
@@ -38,6 +39,13 @@ class XHProfComponent extends \yii\base\Component implements BootstrapInterface
     public $enabled = true;
 
     /**
+     * Enable/disable profiling by cookie
+     *
+     * @var bool
+     */
+    public $enableByCookie = true;
+
+    /**
      * Direct filesystem path or path alias to directory with reports file
      *
      * @var string
@@ -49,7 +57,7 @@ class XHProfComponent extends \yii\base\Component implements BootstrapInterface
      *
      * @var integer
      */
-    public $maxReportsCount = 25;
+    public $maxReportsCount = 100;
 
     /**
      * Flag to automatically start profiling during component bootstrap. Set to false if you want to manually start
@@ -139,6 +147,12 @@ class XHProfComponent extends \yii\base\Component implements BootstrapInterface
     public $blacklistedRoutes = ['debug*'];
 
     /**
+     * Name for the cookie that will enable profiling if the 'enableByCookie' option is on
+     * @var string
+     */
+    public $cookieName = 'enable_xhprof_profiling';
+
+    /**
      * Current report details
      *
      * @var array
@@ -171,6 +185,7 @@ class XHProfComponent extends \yii\base\Component implements BootstrapInterface
     {
         try {
             if (!$this->enabled
+                || !$this->checkEnabledByCookie()
                 || ($this->triggerGetParam !== null && $app->request->getQueryParam($this->triggerGetParam) === null)
                 || $this->isRouteBlacklisted()
             ) {
@@ -219,6 +234,19 @@ class XHProfComponent extends \yii\base\Component implements BootstrapInterface
 
     }
 
+    protected function checkEnabledByCookie()
+    {
+        $result = true;
+        if($this->enableByCookie) {
+            $result = false;
+            $cookie = Yii::$app->request->cookies->get($this->cookieName);
+            if($cookie instanceof Cookie && (bool)$cookie->value === true) {
+                $result = true;
+            }
+        }
+        return $result;
+    }
+
     /**
      * Check if current route is blacklisted (should not be processed)
      *
@@ -236,6 +264,7 @@ class XHProfComponent extends \yii\base\Component implements BootstrapInterface
                 return true;
             }
             $requestRoute = $request[0];
+            var_dump($requestRoute);
         }
 
         foreach ($routes as $route) {
