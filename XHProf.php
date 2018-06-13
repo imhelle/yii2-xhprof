@@ -22,7 +22,7 @@ class XHProf
     const TYPE_DIFF = 'diff';
 
     const EXT_XHPROF = 'xhprof';
-    const EXT_TIDEWAYS_XHPROF = 'tideways_xhprof';
+    const EXT_TIDEWAYS_XHPROF = 'tideways';
 
     /**
      * List of templates to get URL for report, callgraph or diff results
@@ -454,7 +454,7 @@ class XHProf
         if ($this->selectedExtension === self::EXT_XHPROF) {
             xhprof_enable($flags, $options);
         } else {
-            tideways_xhprof_enable($flags);
+            tideways_enable($flags);
         }
 
         $this->runStatus = self::STATUS_RUNNING;
@@ -472,17 +472,17 @@ class XHProf
         if ($this->flagNoBuiltins) {
             $flags += $this->selectedExtension === self::EXT_XHPROF
                 ? XHPROF_FLAGS_NO_BUILTINS
-                : TIDEWAYS_XHPROF_FLAGS_NO_BUILTINS;
+                : TIDEWAYS_FLAGS_NO_BUILTINS;
         }
         if ($this->flagCpu) {
             $flags += $this->selectedExtension === self::EXT_XHPROF
                 ? XHPROF_FLAGS_CPU
-                : TIDEWAYS_XHPROF_FLAGS_CPU;
+                : TIDEWAYS_FLAGS_CPU;
         }
         if ($this->flagMemory) {
             $flags += $this->selectedExtension === self::EXT_XHPROF
                 ? XHPROF_FLAGS_MEMORY
-                : TIDEWAYS_XHPROF_FLAGS_MEMORY;
+                : TIDEWAYS_FLAGS_MEMORY;
         }
 
         return $flags;
@@ -506,7 +506,7 @@ class XHProf
         if ($this->selectedExtension === self::EXT_XHPROF) {
             $data = xhprof_disable();
         } else {
-            $data = tideways_xhprof_disable();
+            $data = tideways_disable();
         }
 
         include_once($this->libPath . '/utils/xhprof_lib.php');
