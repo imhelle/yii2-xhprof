@@ -7,7 +7,6 @@ use yii\base\BootstrapInterface;
 use yii\base\ErrorException;
 use yii\helpers\FileHelper;
 use yii\helpers\Json;
-use yii\web\Cookie;
 use yii\web\View;
 
 /**
@@ -39,13 +38,6 @@ class XHProfComponent extends \yii\base\Component implements BootstrapInterface
     public $enabled = true;
 
     /**
-     * Enable/disable profiling by cookie
-     *
-     * @var bool
-     */
-    public $enableByCookie = true;
-
-    /**
      * Direct filesystem path or path alias to directory with reports file
      *
      * @var string
@@ -57,7 +49,7 @@ class XHProfComponent extends \yii\base\Component implements BootstrapInterface
      *
      * @var integer
      */
-    public $maxReportsCount = 100;
+    public $maxReportsCount = 25;
 
     /**
      * Flag to automatically start profiling during component bootstrap. Set to false if you want to manually start
@@ -147,12 +139,6 @@ class XHProfComponent extends \yii\base\Component implements BootstrapInterface
     public $blacklistedRoutes = ['debug*'];
 
     /**
-     * Name for the cookie that will enable profiling if the 'enableByCookie' option is on
-     * @var string
-     */
-    public $cookieName = 'enable_xhprof_profiling';
-
-    /**
      * Current report details
      *
      * @var array
@@ -183,23 +169,23 @@ class XHProfComponent extends \yii\base\Component implements BootstrapInterface
      */
     public function bootstrap($app)
     {
+        if (!$this->enabled
+            || ($this->triggerGetParam !== null && $app->request->getQueryParam($this->triggerGetParam) === null)
+            || $this->isRouteBlacklisted()
+        ) {
+            return;
+        }
+
+        if (empty($this->libPath)) {
+            throw new \Exception('Lib path cannot be empty');
+        }
+
+        $libPath = $this->libPath;
+        if (\strpos($libPath, '@') === 0) {
+            $libPath = Yii::getAlias($libPath);
+        }
+
         try {
-            if (!$this->enabled
-                || !$this->checkEnabledByCookie()
-                || ($this->triggerGetParam !== null && $app->request->getQueryParam($this->triggerGetParam) === null)
-                || $this->isRouteBlacklisted()
-            ) {
-                return;
-            }
-
-            if (empty($this->libPath)) {
-                throw new \Exception('Lib path cannot be empty');
-            }
-
-            $libPath = $this->libPath;
-            if (\strpos($libPath, '@') === 0) {
-                $libPath = Yii::getAlias($libPath);
-            }
             XHProf::getInstance()->configure([
                 'flagNoBuiltins' => $this->flagNoBuiltins,
                 'flagCpu' => $this->flagCpu,
@@ -209,22 +195,7 @@ class XHProfComponent extends \yii\base\Component implements BootstrapInterface
                 'libPath' => $libPath,
                 'htmlUrlPath' => $this->getReportBaseUrl(),
             ]);
-
-            if ($this->autoStart) {
-                XHProf::getInstance()->run();
-            }
-
-            if ($this->showOverlay && !$app->request->isAjax) {
-                OverlayAsset::register($app->view);
-                $app->view->on(View::EVENT_END_BODY, [$this, 'appendResultsOverlay']);
-            }
-
-            $this->getReportSavePath();
-
-            \register_shutdown_function([$this, 'stopProfiling']);
-            
-            
-        } catch (\Exception $e) {
+        } catch (\RuntimeException $e) {
             if ($this->allowCrash) {
                 return;
             } else {
@@ -232,19 +203,18 @@ class XHProfComponent extends \yii\base\Component implements BootstrapInterface
             }
         }
 
-    }
-
-    protected function checkEnabledByCookie()
-    {
-        $result = true;
-        if($this->enableByCookie) {
-            $result = false;
-            $cookie = Yii::$app->request->cookies->get($this->cookieName);
-            if($cookie instanceof Cookie && (bool)$cookie->value === true) {
-                $result = true;
-            }
+        if ($this->autoStart) {
+            XHProf::getInstance()->run();
         }
-        return $result;
+
+        if ($this->showOverlay && !$app->request->isAjax) {
+            OverlayAsset::register($app->view);
+            $app->view->on(View::EVENT_END_BODY, [$this, 'appendResultsOverlay']);
+        }
+
+        $this->getReportSavePath();
+
+        \register_shutdown_function([$this, 'stopProfiling']);
     }
 
     /**
