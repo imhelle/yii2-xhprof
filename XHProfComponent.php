@@ -170,9 +170,9 @@ class XHProfComponent extends \yii\base\Component implements BootstrapInterface
     public function bootstrap($app)
     {
         try {
-            if ($this->enabled
-                || !($this->triggerGetParam !== null && $app->request->getQueryParam($this->triggerGetParam) === null)
-                || !$this->isRouteBlacklisted()
+            if (!$this->enabled
+                || ($this->triggerGetParam !== null && $app->request->getQueryParam($this->triggerGetParam) === null)
+                || $this->isRouteBlacklisted()
             ) {
                 return;
             }
