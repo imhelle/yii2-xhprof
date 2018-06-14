@@ -49,7 +49,7 @@ class XHProfComponent extends \yii\base\Component implements BootstrapInterface
      *
      * @var integer
      */
-    public $maxReportsCount = 25;
+    public $maxReportsCount = 100;
 
     /**
      * Flag to automatically start profiling during component bootstrap. Set to false if you want to manually start
@@ -169,23 +169,22 @@ class XHProfComponent extends \yii\base\Component implements BootstrapInterface
      */
     public function bootstrap($app)
     {
-        if (!$this->enabled
-            || ($this->triggerGetParam !== null && $app->request->getQueryParam($this->triggerGetParam) === null)
-            || $this->isRouteBlacklisted()
-        ) {
-            return;
-        }
-
-        if (empty($this->libPath)) {
-            throw new \Exception('Lib path cannot be empty');
-        }
-
-        $libPath = $this->libPath;
-        if (\strpos($libPath, '@') === 0) {
-            $libPath = Yii::getAlias($libPath);
-        }
-
         try {
+            if ($this->enabled
+                || !($this->triggerGetParam !== null && $app->request->getQueryParam($this->triggerGetParam) === null)
+                || !$this->isRouteBlacklisted()
+            ) {
+                return;
+            }
+
+            if (empty($this->libPath)) {
+                throw new \Exception('Lib path cannot be empty');
+            }
+
+            $libPath = $this->libPath;
+            if (\strpos($libPath, '@') === 0) {
+                $libPath = Yii::getAlias($libPath);
+            }
             XHProf::getInstance()->configure([
                 'flagNoBuiltins' => $this->flagNoBuiltins,
                 'flagCpu' => $this->flagCpu,
@@ -195,26 +194,27 @@ class XHProfComponent extends \yii\base\Component implements BootstrapInterface
                 'libPath' => $libPath,
                 'htmlUrlPath' => $this->getReportBaseUrl(),
             ]);
-        } catch (\RuntimeException $e) {
+
+            if ($this->autoStart) {
+                XHProf::getInstance()->run();
+            }
+
+            if ($this->showOverlay && !$app->request->isAjax) {
+                OverlayAsset::register($app->view);
+                $app->view->on(View::EVENT_END_BODY, [$this, 'appendResultsOverlay']);
+            }
+
+            $this->getReportSavePath();
+
+            \register_shutdown_function([$this, 'stopProfiling']);
+
+
+        } catch (\Exception $e) {
             if ($this->allowCrash) {
                 return;
-            } else {
-                throw $e;
             }
+            throw $e;
         }
-
-        if ($this->autoStart) {
-            XHProf::getInstance()->run();
-        }
-
-        if ($this->showOverlay && !$app->request->isAjax) {
-            OverlayAsset::register($app->view);
-            $app->view->on(View::EVENT_END_BODY, [$this, 'appendResultsOverlay']);
-        }
-
-        $this->getReportSavePath();
-
-        \register_shutdown_function([$this, 'stopProfiling']);
     }
 
     /**
@@ -235,7 +235,6 @@ class XHProfComponent extends \yii\base\Component implements BootstrapInterface
             }
             $requestRoute = $request[0];
         }
-
         foreach ($routes as $route) {
             $route = \str_replace('*', '([a-zA-Z0-9\/\-\._]{0,})', \str_replace('/', '\/', '^' . $route));
             if (\preg_match("/{$route}/", $requestRoute) !== 0) {
